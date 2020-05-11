@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+</head>
+<body>
+<!--<h1>VanilJS 1주차</h1>-->
+<div>
+    <h2>Todo1</h2>
+    <div id="todo-list"></div>
+</div>
+<div>
+    <h2>Todo2</h2>
+    <div id="todo-list2"></div>
+</div>
+<div>
+    <h2>Todo3</h2>
+    <div id="todo-list3"></div>
+</div>
+<script>
+  const data = [
+    {
+      text: '실행 컨텍스트 공부하기',
+      isCompleted: true,
+    },
+    {
+      text: '프로그래머스 풀기',
+      isCompleted: false,
+    },
+  ]
+
+  const data2 = [
+    {
+      text: '잠 일찍 자기',
+      isCompleted: false,
+    },
+    {
+      text: 'arrow function this 공부하기',
+      isCompleted: true,
+    },
+  ]
+
+  const data3 = [
+    {
+      text: '집 청소하기',
+      isCompleted: true,
+    },
+    {
+      text: '분리수거 하기',
+      isCompleted: true,
+    },
+    {
+      text: 'JS 이벤트 공부하기',
+      isCompleted: false
+    },
+  ]
+
+  function convertLiToHTMLString(data) {
+    const { text, isCompleted } = data
+    return `<li>${isCompleted ? `<s>${text}</s>` : text}</li>`
+  }
+
+  function isValidElementType(objArr) {
+    for (const element of objArr) {
+      const keys = Object.keys(element)
+      const validKeys = new Set(['text', 'isCompleted'])
+      for (const key of keys) {
+        if (!validKeys.has(key)) {
+          return false
+        } else {
+          validKeys.delete(key)
+        }
+      }
+      if (validKeys.size !== 0) return false
+    }
+    return true
+  }
+
+  function validate(data) { // data array validate
+    if (data.length === 0) throw new Error('arguments is empty')
+    if (!Array.isArray(data)) throw new Error('data must be Array')
+    if (!data.length) throw new Error('data array is empty')
+    if (data.some(element => !element) || !isValidElementType(data)) {
+      throw new Error('Type Error')
+    }
+  }
+
+  function TodoList(data, selector) {
+    if (!(this instanceof arguments.callee)) throw new Error('Use new keyword')
+    if (!document.querySelector(selector)) throw new Error('Can\'t find target in DOM')
+    if (!selector) throw new Error('target is empty')
+    validate(data) // data validate
+
+    this.data = data
+    this.target = document.querySelector(selector)
+    this.render = function () {
+      this.target.innerHTML = `<ul>${this.data.map(v => convertLiToHTMLString(v))
+        .join('')}</ul>`
+    }
+    this.setState = function (nextData) {
+      validate(nextData)
+      this.data = nextData
+      this.render()
+    }
+  }
+
+  try {
+    const todoList = new TodoList(data, '#todo-list')
+    todoList.render()
+    const todoList2 = new TodoList(data2, '#todo-list2')
+    todoList2.render()
+    const todoList3 = new TodoList(data3, '#todo-list3')
+    todoList3.render()
+    todoList3.setState([
+      {
+        text: '이벤트 버블링 공부하기',
+        isCompleted: false,
+      },
+      {
+        text: '재미있는 알고리즘 공부하기',
+        isCompleted: true,
+      },
+    ])
+  } catch (e) {
+    console.error(e)
+  }
+</script>
+</body>
+</html>
