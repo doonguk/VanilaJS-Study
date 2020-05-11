@@ -61,7 +61,7 @@
     return `<li>${isCompleted ? `<s>${text}</s>` : text}</li>`
   }
 
-  function isValidElementType(objArr) {
+  function checkArrayElementType(objArr) {
     for (const element of objArr) {
       const keys = Object.keys(element)
       const validKeys = new Set(['text', 'isCompleted'])
@@ -81,15 +81,15 @@
     if (data.length === 0) throw new Error('arguments is empty')
     if (!Array.isArray(data)) throw new Error('data must be Array')
     if (!data.length) throw new Error('data array is empty')
-    if (data.some(element => !element) || !isValidElementType(data)) {
+    if (data.some(element => !element) || !checkArrayElementType(data)) {
       throw new Error('Type Error')
     }
   }
 
   function TodoList(data, selector) {
     if (!(this instanceof arguments.callee)) throw new Error('Use new keyword')
-    if (!document.querySelector(selector)) throw new Error('Can\'t find target in DOM')
     if (!selector) throw new Error('target is empty')
+    if (!document.querySelector(selector)) throw new Error('Can\'t find target in DOM')
     validate(data) // data validate
 
     this.data = data
