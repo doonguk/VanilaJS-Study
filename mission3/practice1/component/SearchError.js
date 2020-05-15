@@ -1,5 +1,5 @@
 import Component from './Component.js'
-import { checkSelector, checkError } from '../utils/validation.js'
+import { checkSelector, checkError } from '../../utils/validation.js'
 
 export default class SearchError extends Component {
   constructor(props) {
