@@ -1,10 +1,8 @@
-import Component from './Component.js'
-import { checkSelector } from '../../utils/validation.js'
-import debounce from '../../utils/debounce.js'
+import { checkSelector } from '../utils/validation.js'
+import debounce from '../utils/debounce.js'
 
-export default class SearchInput extends Component {
+export default class SearchInput {
   constructor(props) {
-    super()
     const { selector, onSearch, onAddHistory } = props
     checkSelector(selector)
     this.$target = document.querySelector(selector)
@@ -18,7 +16,9 @@ export default class SearchInput extends Component {
     this.$input = document.createElement('input')
     this.$input.setAttribute('type', 'text')
     this.$input.setAttribute('placeholder', '키워드를 입력해주세요 :)')
+    this.$input.setAttribute('autofocus', 'true')
     this.$target.appendChild(this.$input)
+
   }
 
   bindEvents() {
@@ -29,12 +29,10 @@ export default class SearchInput extends Component {
       }
     })
     this.$input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        if (e.target.value) {
-          this.onAddHistory(e.target.value)
-          e.target.value = ''
-          this.$input.focus()
-        }
+      if (e.key === 'Enter' && e.target.value) {
+        this.onAddHistory(e.target.value)
+        e.target.value = ''
+        this.$input.focus()
       }
     })
   }

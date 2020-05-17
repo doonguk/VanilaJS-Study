@@ -1,8 +1,9 @@
-let timer
+let timer = ''
 
 const throttle = (f, tick) => {
-  if (!timer){
+  if (!timer) {
     timer = setTimeout(() => {
+      timer = ''
       f()
     }, tick)
   }
