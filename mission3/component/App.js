@@ -11,7 +11,7 @@ export default class App {
     checkSelector(selector)
     this.$target = document.querySelector(selector)
     this.title = title
-    this.componentMount()
+    this.componentBeforeMount()
     this.render()
   }
 
@@ -50,7 +50,7 @@ export default class App {
     })
   }
 
-  componentMount() {
+  componentBeforeMount() {
     this.nextId = null // for history indexing
     this.data = []
     this.histories = []
@@ -87,13 +87,12 @@ export default class App {
   }
 
   handleAddHistory(keyword) {
-    if (keyword) {
-      this.histories = [...this.histories, {
-        id: this.nextId ? this.nextId + 1 : 0,
-        keyword,
-      }]
-      this.nextId = this.nextId + 1 // for next index
-      this.$searchHistory.setState(this.histories)
-    }
+    if (!keyword) { return }
+    this.nextId++
+    this.histories = [...this.histories, {
+      id: this.nextId,
+      keyword,
+    }]
+    this.$searchHistory.setState(this.histories)
   }
 }

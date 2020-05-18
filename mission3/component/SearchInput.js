@@ -18,16 +18,10 @@ export default class SearchInput {
     this.$input.setAttribute('placeholder', '키워드를 입력해주세요 :)')
     this.$input.setAttribute('autofocus', 'true')
     this.$target.appendChild(this.$input)
-
   }
 
   bindEvents() {
-    this.$input.addEventListener('keyup', (e) => {
-      const { value } = e.target
-      if (value) {
-        debounce(() => this.onSearch(value), 500)
-      }
-    })
+    this.$input.addEventListener('keyup', debounce((e) => this.onSearch(e.target.value), 500))
     this.$input.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && e.target.value) {
         this.onAddHistory(e.target.value)

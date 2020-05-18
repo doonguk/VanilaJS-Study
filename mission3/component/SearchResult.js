@@ -5,19 +5,23 @@ const createHTMLElement = (element) => {
   const { imageUrl, title } = element
   const $item = document.createElement('div')
   $item.setAttribute('class', 'image-item')
+
   const $loadingDiv = document.createElement('div')
   $loadingDiv.className = 'loading'
   $loadingDiv.style = 'display: none'
   $loadingDiv.textContent = 'loading...'
+
   const $itemTitle = document.createElement('div')
   $itemTitle.className = 'item-title'
   $itemTitle.textContent = title
+
   const image = new Image()
   image.src = imageUrl
   image.alt = ''
   image.onload = () => {
     $loadingDiv.className = ''
   }
+
   $item.appendChild($loadingDiv)
   $item.appendChild(image)
   $item.appendChild($itemTitle)
@@ -30,15 +34,13 @@ export default class SearchResult {
     checkSelector(selector)
     this.$target = document.querySelector(selector)
     this.images = images
-    this.componentMount()
+    this.componentBeforeMount()
     this.render()
   }
 
   render() {
     // 해봐야 하는 것 >검색 안했을 때, 로딩 중 + lazy loading?, 검색 후
-    if (this.isInitialRender) { // initial render
-      this.$target.innerHTML = '<div>검색어를 기다리고 있어요.</div>'
-    } else {
+    if (this.isSearched) {
       const startIndex = (this.currentPage - 1) * (this.size)
       const endIndex = startIndex + this.size
       const currentRenderImages = this.images.slice(startIndex, endIndex)
@@ -48,26 +50,29 @@ export default class SearchResult {
       currentRenderImages.forEach((image) => {
         this.$target.appendChild(createHTMLElement(image))
       })
+    } else { // initial render
+      this.$target.innerHTML = '<div>검색어를 기다리고 있어요.</div>'
     }
   }
 
-  componentMount() {
+  componentBeforeMount() {
     this.currentPage = 1 // scroll에 따른 lazy loading
     this.size = 10
-    this.isInitialRender = true // 검색 안했을 때, 했을 때 flag
+    this.isSearched = false // 검색 안했을 때, 했을 때 flag
     window.addEventListener('scroll', () => {
       if (this.images.length > ((this.currentPage - 1) * 10 + this.size)) { // this가 SearchResult ?
         const { offsetHeight } = document.body
         if (window.scrollY + window.innerHeight >= offsetHeight) {
           this.currentPage += 1
-          throttle(this.render.bind(this), 400)
+          throttle(this.render.bind(this), 400)()
         }
       }
     })
   }
 
   setState(nextData) {
-    this.isInitialRender = false
+    this.isSearched = true
+    this.currentPage = 1
     this.images = nextData
     this.render()
   }
