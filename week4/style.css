@@ -126,7 +126,8 @@ section > .input-btn {
 .user-section > ul {
     width: 100%;
     list-style: none;
-    padding: 0;
+    padding-right: 12px;
+    padding-bottom: 12px;
     height: 80vh;
     overflow-y: scroll;
 }
@@ -156,7 +157,7 @@ section > .input-btn {
 }
 .list-section article {
     margin-top: 20px;
-    flex: 0.5
+    flex: 0.5;
 }
 .list-section article > h2 {
     text-align: center;
@@ -164,6 +165,7 @@ section > .input-btn {
 
 .list-section article > ul {
     list-style: none;
+    height: 100vh;
 }
 
 .list-section article > ul > li {
