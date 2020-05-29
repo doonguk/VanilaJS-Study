@@ -157,7 +157,7 @@ section > .input-btn {
 }
 .list-section article {
     margin-top: 20px;
-    flex: 0.5;
+    flex: 0.5
 }
 .list-section article > h2 {
     text-align: center;
@@ -165,7 +165,7 @@ section > .input-btn {
 
 .list-section article > ul {
     list-style: none;
-    height: 100vh;
+    height: 80vh;
 }
 
 .list-section article > ul > li {

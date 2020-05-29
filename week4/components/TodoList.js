@@ -15,43 +15,35 @@ export default function TodoList(props) {
 
     const $completedArticle = document.createElement('article')
     const $completedTitle = document.createElement('h2')
-    $completedTitle.innerHTML = '완료'
+    $completedTitle.textContent = '완료'
     this.$completedList = document.createElement('ul')
+    this.$completedList.setAttribute('data-type', 'done')
     $completedArticle.appendChild($completedTitle)
     $completedArticle.appendChild(this.$completedList)
 
     const $notCompletedArticle = document.createElement('article')
     const $notCompletedTitle = document.createElement('h2')
-    $notCompletedTitle.innerHTML = '미완료'
+    $notCompletedTitle.textContent = '미완료'
+
     this.$notCompletedList = document.createElement('ul')
+    this.$notCompletedList.setAttribute('data-type', 'yet')
     $notCompletedArticle.appendChild($notCompletedTitle)
     $notCompletedArticle.appendChild(this.$notCompletedList)
 
-    $box.appendChild($completedArticle)
     $box.appendChild($notCompletedArticle)
+    $box.appendChild($completedArticle)
     $target.appendChild($box)
     this.bindEvents()
     this.render()
   }
 
   this.render = () => {
-    const completedArray = []
-    const notCompletedArray = []
-    this.todos.forEach((todo) => {
-      const { isCompleted } = todo
-      if (isCompleted) {
-        completedArray.push(todo)
-      } else {
-        notCompletedArray.push(todo)
-      }
-    })
-    this.$completedList.innerHTML = completedArray.map(({ _id, content }) => {
-      return `<li data-id=${_id} draggable="true"><s>${content}</s><button>삭제</button></li>`
-    })
+    const completedArray = this.todos.filter(({isCompleted}) => isCompleted)
+    const notCompletedArray = this.todos.filter(({isCompleted}) => !isCompleted)
+
+    this.$completedList.innerHTML = completedArray.map(({ _id, content }) => `<li data-id=${_id} draggable="true"><s>${content}</s><button>삭제</button></li>`)
       .join('')
-    this.$notCompletedList.innerHTML = notCompletedArray.map(({ _id, content }) => {
-      return `<li data-id=${_id} draggable="true">${content}<button>삭제</button></li>`
-    })
+    this.$notCompletedList.innerHTML = notCompletedArray.map(({ _id, content }) => `<li data-id=${_id} draggable="true">${content}<button>삭제</button></li>`)
       .join('')
   }
 
@@ -74,8 +66,11 @@ export default function TodoList(props) {
     // drag event start
     const dragStartCallback = (e) => {
       const $startParentNode = e.target.closest('ul')
-      e.dataTransfer.setData('text/plain', e.target.dataset.id)
-      e.dataTransfer.setData('text/html', $startParentNode)
+      const { type } = $startParentNode.dataset
+      e.dataTransfer.setData('text/plain', JSON.stringify({
+        id: e.target.dataset.id, // toggle용 id
+        type, // start end 구분용 type
+      }))
     } // drag start
 
     const dragOverCallback = (e) => {
@@ -85,10 +80,10 @@ export default function TodoList(props) {
 
     const dropCallback = (e) => {
       const $endParentNode = e.target.closest('ul')
-      const targetId = e.dataTransfer.getData('text/plain')
+      const { type: endNodeType } = $endParentNode.dataset
+      const { id: targetId, type: startNodeType } = JSON.parse(e.dataTransfer.getData('text/plain'))
       if (targetId) {
-        const $startParentNode = e.dataTransfer.getData('text/html')
-        if ($endParentNode !== $startParentNode) { // 드래그 스타트, 엔드 지점이 다른 경우에만 toggle
+        if (startNodeType !== endNodeType) { // 드래그 스타트, 엔드 지점이 다른 경우에만 toggle
           onToggle(targetId)
         }
       }

@@ -1,4 +1,7 @@
 export default function ModalWrapper({ selector, $children }) {
+  if (new.target !== ModalWrapper) {
+    throw new Error('Please use \'new\' keyword')
+  }
   this.render = () => {
     this.$target = document.querySelector(selector)
 

@@ -28,6 +28,7 @@ export const checkTodos = (todos) => {
         throw new Error('invalid key type')
       }
     })
+    if (validKeys.size !== 0) throw new Error('invalid type')
   })
 }
 
