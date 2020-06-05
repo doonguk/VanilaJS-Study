@@ -8,8 +8,10 @@ export default function TodoUsers(props) {
   checkUsers(users)
 
   this.init = () => {
+    const $frag = document.createDocumentFragment() // minimize reflow, repaint
     const $target = document.querySelector(selector)
     const $box = document.createElement('section')
+    $frag.appendChild($box)
     $box.className = 'user-section'
 
     const $title = document.createElement('h2')
@@ -20,7 +22,7 @@ export default function TodoUsers(props) {
 
     $box.appendChild($title)
     $box.appendChild(this.$userList)
-    $target.appendChild($box)
+    $target.appendChild($frag)
     this.bindEvent()
   }
 

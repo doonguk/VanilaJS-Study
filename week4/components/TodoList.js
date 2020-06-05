@@ -10,7 +10,9 @@ export default function TodoList(props) {
 
   this.init = () => {
     const $target = document.querySelector(selector)
+    const $frag = document.createDocumentFragment() // minimize reflow, repaint
     const $box = document.createElement('section')
+    $frag.appendChild($box)
     $box.className = 'list-section'
 
     const $completedArticle = document.createElement('article')
@@ -32,7 +34,7 @@ export default function TodoList(props) {
 
     $box.appendChild($notCompletedArticle)
     $box.appendChild($completedArticle)
-    $target.appendChild($box)
+    $target.appendChild($frag)
     this.bindEvents()
     this.render()
   }

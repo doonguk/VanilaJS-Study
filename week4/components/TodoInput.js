@@ -7,7 +7,9 @@ export default function TodoInput(props) {
   const { selector, onAddTodo } = props
 
   this.init = () => {
+    const $frag = document.createDocumentFragment()
     const $inputSection = document.createElement('section')
+    $frag.appendChild($inputSection)
     $inputSection.id = 'todo-input'
 
     this.$input = document.createElement('input')
@@ -21,7 +23,7 @@ export default function TodoInput(props) {
     $inputSection.appendChild(this.$input)
     $inputSection.appendChild(this.$inputButton)
     const $app = document.querySelector(selector)
-    $app.appendChild($inputSection)
+    $app.appendChild($frag)
 
     this.$todoInputErrorModal = new ErrorModal({
       selector: '#todo-input',
@@ -33,6 +35,7 @@ export default function TodoInput(props) {
 
   this.bindEvent = () => {
     this.$input.addEventListener('keyup', (e) => {
+      console.log(e.key)
       if (e.key === 'Enter' && e.target.value.trim()) {
         onAddTodo(e.target.value)
         e.target.value = ''

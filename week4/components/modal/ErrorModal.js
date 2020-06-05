@@ -12,7 +12,9 @@ export default function ErrorModal({ selector, title, content }) {
   })
 
   this.render = () => {
+    const $frag = document.createDocumentFragment() // minimize reflow, repaint
     const $children = document.createElement('div') // input error modal box
+    $frag.appendChild($children)
     $children.className = 'error-box'
     this.$title = document.createElement('h2')
     this.$title.innerHTML = title
@@ -30,7 +32,7 @@ export default function ErrorModal({ selector, title, content }) {
     $children.appendChild(this.$closeButton)
     this.$todoInputErrorModal = new ModalWrapper({
       selector,
-      $children,
+      $children: $frag,
     })
     this.bindEvent()
   }

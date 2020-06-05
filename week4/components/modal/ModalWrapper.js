@@ -3,6 +3,7 @@ export default function ModalWrapper({ selector, $children }) {
     throw new Error('Please use \'new\' keyword')
   }
   this.render = () => {
+    const $frag = document.createDocumentFragment() // minimize reflow, repaint
     this.$target = document.querySelector(selector)
 
     this.$grayBg = document.createElement('div')
@@ -12,9 +13,10 @@ export default function ModalWrapper({ selector, $children }) {
     this.$modalWrapper = document.createElement('div')
     this.$modalWrapper.className = 'modal-wrapper'
 
-    this.$modalWrapper.appendChild($children)
+    $frag.appendChild(this.$grayBg)
     this.$grayBg.appendChild(this.$modalWrapper)
-    this.$target.appendChild(this.$grayBg)
+    this.$modalWrapper.appendChild($children)
+    this.$target.appendChild($frag)
 
     this.bindEvents()
   }
